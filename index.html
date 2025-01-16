@@ -4,38 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avatar Customization</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Customize Your Avatar</h1>
-    <form id="avatarForm">
-        <label for="color">Color:</label>
-        <input type="text" id="color" name="color" value="red"><br>
-        <label for="outfit">Outfit:</label>
-        <input type="text" id="outfit" name="outfit" value="default"><br>
-        <button type="submit">Save</button>
-    </form>
+    <header>
+        <h1>Avatar Customization</h1>
+    </header>
+    <main>
+        <section id="avatar-editor">
+            <h2>Edit Your Avatar</h2>
+            <label for="color">Avatar Color:</label>
+            <input type="color" id="color" value="#ff0000">
+            <label for="outfit">Outfit:</label>
+            <select id="outfit">
+                <option value="default">Default</option>
+                <option value="ninja">Ninja</option>
+                <option value="robot">Robot</option>
+            </select>
+            <button id="saveAvatar">Save Avatar</button>
+        </section>
 
-    <script>
-        const apiUrl = "https://still-shape-5b00.cubiodojo.workers.dev/api/avatar";
-        const userId = "123"; // Mocked user ID
-
-        document.getElementById('avatarForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const color = document.getElementById('color').value;
-            const outfit = document.getElementById('outfit').value;
-
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, avatar: { color, outfit } }),
-            });
-
-            if (response.ok) {
-                alert('Avatar updated successfully!');
-            } else {
-                alert('Failed to update avatar.');
-            }
-        });
-    </script>
+        <section id="marketplace">
+            <h2>Marketplace</h2>
+            <div id="items">
+                <!-- Items will be dynamically loaded here -->
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
