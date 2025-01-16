@@ -1,4 +1,4 @@
-const apiUrl = "https://still-shape-5b00.cubiodojo.workers.dev/";
+const apiUrl = "https://still-shape-5b00.cubiodojo.workers.dev";
 
 document.getElementById("saveAvatar").addEventListener("click", async () => {
     const avatarData = {
