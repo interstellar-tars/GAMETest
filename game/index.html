@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Game</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const backendUrl = "https://your-cloudflare-worker-url.workers.dev/api/avatar";
+        const userId = "123"; // Mocked user ID
+
+        async function fetchAvatarData() {
+            const response = await fetch(`${backendUrl}?userId=${userId}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error("Failed to load avatar data");
+                return { color: "blue", outfit: "default" }; // Default avatar
+            }
+        }
+
+        async function initGame() {
+            const avatarData = await fetchAvatarData();
+
+            // Set up WebGL
+            const canvas = document.getElementById("gameCanvas");
+            const gl = canvas.getContext("webgl");
+
+            if (!gl) {
+                console.error("WebGL not supported");
+                return;
+            }
+
+            // Clear canvas with avatar color
+            gl.clearColor(avatarData.color === "red" ? 1 : 0, 0, 0, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Placeholder: Draw a square representing the avatar
+            const vertices = new Float32Array([
+                -0.5, -0.5,
+                0.5, -0.5,
+                -0.5, 0.5,
+                0.5, 0.5,
+            ]);
+
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+            const vertexShaderCode = `
+                attribute vec2 position;
+                void main() {
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            const fragmentShaderCode = `
+                precision mediump float;
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderCode);
+            gl.compileShader(vertexShader);
+
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderCode);
+            gl.compileShader(fragmentShader);
+
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionLocation = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
