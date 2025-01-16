@@ -10,19 +10,27 @@ class GameEngine {
     init() {
         this.gl.clearColor(0.5, 0.5, 0.5, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
-        this.loadAssets();
+        this.loadScene();
     }
 
-    loadAssets() {
-        // Load 3D models, textures, and shaders
+    loadScene() {
+        console.log("Loading scene...");
+        // Load environment and avatar
+        this.loadAvatar();
+    }
+
+    loadAvatar() {
         fetch("/assets/avatars/default-avatar.gltf")
-            .then((res) => res.json())
-            .then((model) => this.renderAvatar(model));
+            .then(res => res.json())
+            .then(model => {
+                console.log("Avatar loaded:", model);
+                this.renderAvatar(model);
+            });
     }
 
     renderAvatar(model) {
-        // Parse and render the 3D avatar model
-        console.log("Rendering avatar:", model);
+        console.log("Rendering avatar...");
+        // Render avatar here
     }
 
     start() {
@@ -35,7 +43,7 @@ class GameEngine {
     }
 
     update() {
-        // Game logic
+        // Game logic updates
     }
 
     render() {
